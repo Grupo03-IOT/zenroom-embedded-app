@@ -148,7 +148,7 @@ void publicar(float prob) {
   static char msg[224];
   snprintf(msg, sizeof(msg), "{\"device_id\":\"%s\",\"probability\":%.3f,\"horizon_min\":15,\"temperature_limit_c\":%.2f,\"model_version\":\"zenroom-5x16x16-v1\"}",
            DEVICE_ID, prob, limiteTemp);
-  mqtt.beginMessage(topicForecast);
+  mqtt.beginMessage(topicForecast, false, 1);
   mqtt.print(msg);
   mqtt.endMessage();
 }
@@ -167,7 +167,7 @@ void publicarLectura(float temp, float humedad, float ruido, bool ocupada, uint1
     "{\"device_id\":\"%s\",\"room_id\":\"%s\",\"seq\":%lu,\"ts\":\"%s\",\"fw_version\":\"zenroom-forecast-v1\",\"acoustic\":{\"laeq_1s\":[%.1f],\"hist\":[],\"lmax\":%.1f,\"lmin\":%.1f},\"climate\":{\"temp_c\":%.2f,\"rh_pct\":%.1f},\"presence\":{\"state\":\"%s\",\"occupied_s\":%.0f,\"transitions\":%u}}",
     DEVICE_ID, ROOM_ID, (unsigned long)++secuencia, ts, ruido, ruido, ruido,
     temp, humedad, ocupada ? "occupied" : "vacant", ocupada ? 10.0f : 0.0f, trans);
-  mqtt.beginMessage(topicReadings, 0, false, 1);
+  mqtt.beginMessage(topicReadings, false, 1);
   mqtt.print(msg);
   mqtt.endMessage();
 }
@@ -260,6 +260,8 @@ void setup() {
   snprintf(topicReadings, sizeof(topicReadings), "%s/room/%s/readings", TOPIC_BASE, ROOM_ID);
   configTime(0, 0, "pool.ntp.org", "time.nist.gov");
   Serial.println(F("ZenRoom - aviso anticipado de calor"));
+  // El JSON de lectura supera el buffer MQTT predeterminado de 256 bytes.
+  mqtt.setTxPayloadSize(512);
   autoprueba();
   WiFi.begin(WIFI_SSID, "", 6);
 }
