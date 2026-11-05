@@ -36,4 +36,6 @@ The model verification does not require a device. A real MQTT integration test r
 
 ## Branching
 
-`develop` is the integration target. Submit device changes from feature branches through pull requests; do not commit directly to `main`.
+Submit device changes from feature branches through pull requests to the temporary `TF` branch.
+After the full integration slice passes validation, promote it through `TF` → `develop` → `main`
+using pull requests; do not commit directly to `main`.
