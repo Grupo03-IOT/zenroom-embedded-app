@@ -18,7 +18,7 @@
 #include <time.h>
 #include <math.h>
 #include "DHTesp.h"
-#include "forecast_weights.h"
+#include "../colab/forecast_weights.h"
 
 // ---------------------------------------------------------------- pines (seccion 5.6)
 const uint8_t PIN_DHT = 15;     // DHT22 (sustituye al SHT31)
