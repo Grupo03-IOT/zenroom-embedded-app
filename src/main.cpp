@@ -260,6 +260,8 @@ void setup() {
   snprintf(topicReadings, sizeof(topicReadings), "%s/room/%s/readings", TOPIC_BASE, ROOM_ID);
   configTime(0, 0, "pool.ntp.org", "time.nist.gov");
   Serial.println(F("ZenRoom - aviso anticipado de calor"));
+  // El JSON de lectura supera el buffer MQTT predeterminado de 256 bytes.
+  mqtt.setTxPayloadSize(512);
   autoprueba();
   WiFi.begin(WIFI_SSID, "", 6);
 }
