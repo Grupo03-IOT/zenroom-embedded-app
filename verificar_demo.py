@@ -13,7 +13,7 @@ from red_desde_header import cargar, red
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 CLI = os.path.expanduser(r"~/.wokwi/bin/wokwi-cli.exe")
-HEADER = os.path.join(AQUI, 'src', 'forecast_weights.h')
+HEADER = os.path.join(AQUI, 'colab', 'forecast_weights.h')
 EPISODIO = os.path.join(AQUI, 'colab', 'episodio_demo.csv')
 ESCENARIO = os.path.join(AQUI, 'escenario-episodio.yaml')
 DIAG_VERIF = 'diagram-verificacion.json'
