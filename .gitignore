@@ -1,0 +1,7 @@
+.pio/
+.venv/
+__pycache__/
+*.py[cod]
+evidencia-serial.log
+evidencia-mqtt.jsonl
+evidencia-luz.vcd
