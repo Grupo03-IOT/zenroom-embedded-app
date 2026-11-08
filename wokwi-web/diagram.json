@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "author": "Gilbert Huarcaya - SenseWork (1ASI0572)",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -130,
+      "left": 150,
+      "attrs": {
+        "temperature": "23.4",
+        "humidity": "62"
+      }
+    },
+    {
+      "type": "wokwi-pir-motion-sensor",
+      "id": "pir1",
+      "top": -40,
+      "left": -200,
+      "attrs": {
+        "delayTime": "150"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pot1",
+      "top": 140,
+      "left": -210,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledVerde",
+      "top": 30,
+      "left": 170,
+      "attrs": {
+        "color": "green"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledAmbar",
+      "top": 30,
+      "left": 215,
+      "attrs": {
+        "color": "orange"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledRojo",
+      "top": 30,
+      "left": 260,
+      "attrs": {
+        "color": "red"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 120,
+      "left": 150,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 120,
+      "left": 195,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r3",
+      "top": 120,
+      "left": 240,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "dht1:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "dht1:GND",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "dht1:SDA",
+      "esp:15",
+      "green",
+      []
+    ],
+    [
+      "pir1:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "pir1:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "pir1:OUT",
+      "esp:27",
+      "yellow",
+      []
+    ],
+    [
+      "pot1:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "pot1:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "pot1:SIG",
+      "esp:34",
+      "violet",
+      []
+    ],
+    [
+      "esp:21",
+      "ledVerde:A",
+      "green",
+      []
+    ],
+    [
+      "esp:19",
+      "ledAmbar:A",
+      "orange",
+      []
+    ],
+    [
+      "esp:18",
+      "ledRojo:A",
+      "red",
+      []
+    ],
+    [
+      "ledVerde:C",
+      "r1:1",
+      "black",
+      []
+    ],
+    [
+      "ledAmbar:C",
+      "r2:1",
+      "black",
+      []
+    ],
+    [
+      "ledRojo:C",
+      "r3:1",
+      "black",
+      []
+    ],
+    [
+      "r1:2",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "r2:2",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "r3:2",
+      "esp:GND.2",
+      "black",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

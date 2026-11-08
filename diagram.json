@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "author": "Grupo03-IOT - SenseWork",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -134.1,
+      "left": 148.2,
+      "attrs": {
+        "temperature": "23.4",
+        "humidity": "62"
+      }
+    },
+    {
+      "type": "wokwi-pir-motion-sensor",
+      "id": "pir1",
+      "top": -130,
+      "left": -190,
+      "attrs": {
+        "delayTime": "60"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pot1",
+      "top": 120,
+      "left": -220,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btnPrueba",
+      "top": 30,
+      "left": -230,
+      "attrs": {
+        "color": "blue",
+        "label": "presencia (escenario)"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledVerde",
+      "top": 40,
+      "left": 220,
+      "attrs": {
+        "color": "green"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledAmbar",
+      "top": 40,
+      "left": 260,
+      "attrs": {
+        "color": "orange"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledRojo",
+      "top": 40,
+      "left": 300,
+      "attrs": {
+        "color": "red"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 130,
+      "left": 205,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 130,
+      "left": 245,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r3",
+      "top": 130,
+      "left": 285,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzzer1",
+      "top": -40,
+      "left": -150,
+      "attrs": {
+        "volume": "0.1"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "dht1:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "dht1:GND",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "dht1:SDA",
+      "esp:23",
+      "green",
+      []
+    ],
+    [
+      "pir1:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "pir1:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "pir1:OUT",
+      "esp:27",
+      "yellow",
+      []
+    ],
+    [
+      "btnPrueba:1.l",
+      "esp:13",
+      "blue",
+      []
+    ],
+    [
+      "btnPrueba:2.l",
+      "esp:GND.1",
+      "red",
+      []
+    ],
+    [
+      "pot1:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "pot1:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "pot1:SIG",
+      "esp:34",
+      "violet",
+      []
+    ],
+    [
+      "esp:21",
+      "ledVerde:A",
+      "green",
+      []
+    ],
+    [
+      "esp:19",
+      "ledAmbar:A",
+      "orange",
+      []
+    ],
+    [
+      "esp:18",
+      "ledRojo:A",
+      "red",
+      []
+    ],
+    [
+      "ledVerde:C",
+      "r1:1",
+      "black",
+      []
+    ],
+    [
+      "ledAmbar:C",
+      "r2:1",
+      "black",
+      []
+    ],
+    [
+      "ledRojo:C",
+      "r3:1",
+      "black",
+      []
+    ],
+    [
+      "r1:2",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "r2:2",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "r3:2",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "buzzer1:1",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "buzzer1:2",
+      "esp:26",
+      "orange",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

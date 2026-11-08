@@ -1,0 +1,261 @@
+name: ZenRoom - episodio de la sala-03 y limite por MQTT
+version: 1
+author: Grupo03-IOT - SenseWork
+steps:
+  - wait-serial: "AUTOPRUEBA red C++ vs Keras"
+  - wait-serial: "[MQTT] conectado"
+  - wait-serial: "min="
+  - delay: 1100ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.41 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.0 }
+  - set-control: { part-id: pot1, control: position, value: 0.1900 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.26 }
+  - set-control: { part-id: dht1, control: humidity, value: 61.5 }
+  - set-control: { part-id: pot1, control: position, value: 0.1838 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.07 }
+  - set-control: { part-id: dht1, control: humidity, value: 61.2 }
+  - set-control: { part-id: pot1, control: position, value: 0.1963 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.95 }
+  - set-control: { part-id: dht1, control: humidity, value: 60.9 }
+  - set-control: { part-id: pot1, control: position, value: 0.1880 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.81 }
+  - set-control: { part-id: dht1, control: humidity, value: 60.5 }
+  - set-control: { part-id: pot1, control: position, value: 0.1853 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.68 }
+  - set-control: { part-id: dht1, control: humidity, value: 60.2 }
+  - set-control: { part-id: pot1, control: position, value: 0.1910 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.55 }
+  - set-control: { part-id: dht1, control: humidity, value: 59.9 }
+  - set-control: { part-id: pot1, control: position, value: 0.1918 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.46 }
+  - set-control: { part-id: dht1, control: humidity, value: 59.7 }
+  - set-control: { part-id: pot1, control: position, value: 0.1925 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.36 }
+  - set-control: { part-id: dht1, control: humidity, value: 59.4 }
+  - set-control: { part-id: pot1, control: position, value: 0.1932 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.27 }
+  - set-control: { part-id: dht1, control: humidity, value: 59.1 }
+  - set-control: { part-id: pot1, control: position, value: 0.1917 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.21 }
+  - set-control: { part-id: dht1, control: humidity, value: 58.9 }
+  - set-control: { part-id: pot1, control: position, value: 0.1910 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.11 }
+  - set-control: { part-id: dht1, control: humidity, value: 58.7 }
+  - set-control: { part-id: pot1, control: position, value: 0.1945 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 0 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.25 }
+  - set-control: { part-id: dht1, control: humidity, value: 59.1 }
+  - set-control: { part-id: pot1, control: position, value: 0.5138 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.40 }
+  - set-control: { part-id: dht1, control: humidity, value: 59.5 }
+  - set-control: { part-id: pot1, control: position, value: 0.5393 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.48 }
+  - set-control: { part-id: dht1, control: humidity, value: 59.9 }
+  - set-control: { part-id: pot1, control: position, value: 0.5327 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.62 }
+  - set-control: { part-id: dht1, control: humidity, value: 60.2 }
+  - set-control: { part-id: pot1, control: position, value: 0.5170 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.71 }
+  - set-control: { part-id: dht1, control: humidity, value: 60.4 }
+  - set-control: { part-id: pot1, control: position, value: 0.5150 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.81 }
+  - set-control: { part-id: dht1, control: humidity, value: 60.7 }
+  - set-control: { part-id: pot1, control: position, value: 0.5150 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 23.91 }
+  - set-control: { part-id: dht1, control: humidity, value: 60.9 }
+  - set-control: { part-id: pot1, control: position, value: 0.5525 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.00 }
+  - set-control: { part-id: dht1, control: humidity, value: 61.2 }
+  - set-control: { part-id: pot1, control: position, value: 0.5158 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.07 }
+  - set-control: { part-id: dht1, control: humidity, value: 61.5 }
+  - set-control: { part-id: pot1, control: position, value: 0.5158 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.15 }
+  - set-control: { part-id: dht1, control: humidity, value: 61.6 }
+  - set-control: { part-id: pot1, control: position, value: 0.4982 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.20 }
+  - set-control: { part-id: dht1, control: humidity, value: 61.8 }
+  - set-control: { part-id: pot1, control: position, value: 0.5158 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.25 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.0 }
+  - set-control: { part-id: pot1, control: position, value: 0.5232 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.32 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.1 }
+  - set-control: { part-id: pot1, control: position, value: 0.5197 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.38 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.2 }
+  - set-control: { part-id: pot1, control: position, value: 0.4957 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.43 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.2 }
+  - set-control: { part-id: pot1, control: position, value: 0.5228 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.47 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.3 }
+  - set-control: { part-id: pot1, control: position, value: 0.5322 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.51 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.4 }
+  - set-control: { part-id: pot1, control: position, value: 0.5163 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.55 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.5 }
+  - set-control: { part-id: pot1, control: position, value: 0.5032 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.60 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.7 }
+  - set-control: { part-id: pot1, control: position, value: 0.5247 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.63 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.8 }
+  - set-control: { part-id: pot1, control: position, value: 0.4895 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.66 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.9 }
+  - set-control: { part-id: pot1, control: position, value: 0.5128 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.69 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.8 }
+  - set-control: { part-id: pot1, control: position, value: 0.5012 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.72 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.7 }
+  - set-control: { part-id: pot1, control: position, value: 0.5127 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.77 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.9 }
+  - set-control: { part-id: pot1, control: position, value: 0.5793 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.80 }
+  - set-control: { part-id: dht1, control: humidity, value: 62.9 }
+  - set-control: { part-id: pot1, control: position, value: 0.5398 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.83 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.0 }
+  - set-control: { part-id: pot1, control: position, value: 0.5215 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.86 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.2 }
+  - set-control: { part-id: pot1, control: position, value: 0.5002 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.89 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.2 }
+  - set-control: { part-id: pot1, control: position, value: 0.5455 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.92 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.4 }
+  - set-control: { part-id: pot1, control: position, value: 0.4895 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.95 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.4 }
+  - set-control: { part-id: pot1, control: position, value: 0.5175 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 24.97 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.4 }
+  - set-control: { part-id: pot1, control: position, value: 0.5287 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 25.00 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.5 }
+  - set-control: { part-id: pot1, control: position, value: 0.5000 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 25.02 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.6 }
+  - set-control: { part-id: pot1, control: position, value: 0.5242 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 25.05 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.6 }
+  - set-control: { part-id: pot1, control: position, value: 0.5257 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 25.05 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.6 }
+  - set-control: { part-id: pot1, control: position, value: 0.5117 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 25.07 }
+  - set-control: { part-id: dht1, control: humidity, value: 63.8 }
+  - set-control: { part-id: pot1, control: position, value: 0.5533 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 25.04 }
+  - set-control: { part-id: dht1, control: humidity, value: 64.1 }
+  - set-control: { part-id: pot1, control: position, value: 0.5220 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - set-control: { part-id: dht1, control: temperature, value: 25.04 }
+  - set-control: { part-id: dht1, control: humidity, value: 64.2 }
+  - set-control: { part-id: pot1, control: position, value: 0.4968 }
+  - set-control: { part-id: btnPrueba, control: pressed, value: 1 }
+  - delay: 2200ms
+  - wait-serial: "[MQTT] nuevo limite de temperatura: 24.00 C"
+  - wait-serial: "limite=24.00"
+  - wait-serial: "[MQTT] limite 45.00 fuera de rango"
