@@ -21,10 +21,23 @@
 #include "../colab/forecast_weights.h"
 
 // ---------------------------------------------------------------- pines (seccion 5.6)
-const uint8_t PIN_DHT = 15;     // DHT22 (sustituye al SHT31)
-const uint8_t PIN_RUIDO = 34;   // potenciometro (sustituye al INMP441)
-const uint8_t PIN_PIR = 27;     // PIR (sustituye al LD2410C)
-const uint8_t PIN_PRUEBA = 26;  // boton de prueba: solo lo usa el escenario automatico (Wokwi no deja mover el PIR)
+// Los pines dependen del montaje: Wokwi (perfil zenroom-sim) y la protoboard real (perfil zenroom,
+// segun la Guia de conexiones). Se cambian con -DPIN_xxx en platformio.ini.
+#ifndef PIN_DHT
+#define PIN_DHT 15              // DHT22 (sustituye al SHT31). Montaje real: GPIO 23
+#endif
+#ifndef PIN_RUIDO
+#define PIN_RUIDO 34            // potenciometro que simula el ruido (sustituye al INMP441)
+#endif
+#ifndef PIN_PIR
+#define PIN_PIR 27              // PIR (sustituye al LD2410C)
+#endif
+#ifndef PIN_PRUEBA
+#define PIN_PRUEBA -1           // boton de prueba del escenario automatico de Wokwi; -1 = no existe
+#endif
+#ifndef PIN_BUZZER
+#define PIN_BUZZER -1           // modulo pasivo de disparo bajo (montaje real: GPIO 26); -1 = no existe
+#endif
 const uint8_t PIN_VERDE = 21, PIN_AMBAR = 19, PIN_ROJO = 18;
 
 // ---------------------------------------------------------------- configuracion
@@ -40,14 +53,29 @@ const uint8_t PIN_VERDE = 21, PIN_AMBAR = 19, PIN_ROJO = 18;
 #ifndef TOPIC_BASE
 #define TOPIC_BASE "comfort/site-1"
 #endif
-const char WIFI_SSID[] = "Wokwi-GUEST";
-const char BROKER[] = "broker.hivemq.com";
-const int BROKER_PORT = 1883;   // en el hardware real: 8883 con TLS
+#ifndef WIFI_SSID
+#define WIFI_SSID "Wokwi-GUEST"
+#endif
+#ifndef WIFI_PASS
+#define WIFI_PASS ""
+#endif
+#ifndef WIFI_CHANNEL
+#define WIFI_CHANNEL 6          // canal fijo de Wokwi-GUEST; en una red real se usa 0 (automatico)
+#endif
+#ifndef MQTT_HOST
+#define MQTT_HOST "broker.hivemq.com"
+#endif
+#ifndef MQTT_PORT
+#define MQTT_PORT 1883          // sin TLS: solo para simulacion o una red privada
+#endif
 const unsigned long PARPADEO_MS = 400;
 const unsigned long REINTENTO_MQTT_MS = 5000;
+#ifndef KEEPALIVE_MS
+#define KEEPALIVE_MS 60000L     // hardware real: 60 s. Wokwi corre mas lento que el reloj y usa un valor mayor
+#endif
 const float LIMITE_MIN = 18.0f, LIMITE_MAX = 30.0f;
 
-char topicCmd[96], topicForecast[96], topicReadings[96];
+char topicCmd[96], topicForecast[96], topicReadings[96], topicStatus[96];
 
 WiFiClient wifiClient;
 MqttClient mqtt(wifiClient);
@@ -136,10 +164,16 @@ void conectarMqtt() {
   if (ultimoIntento && millis() - ultimoIntento < REINTENTO_MQTT_MS) return;   // no bloquea el loop
   ultimoIntento = millis();
   mqtt.setId(DEVICE_ID);
-  mqtt.setKeepAliveInterval(600 * 1000L);  // la simulacion corre mas lento que el reloj (App4)
-  if (!mqtt.connect(BROKER, BROKER_PORT)) { Serial.println(F("[MQTT] sin conexion, se reintenta")); return; }
+  mqtt.setKeepAliveInterval(KEEPALIVE_MS);
+  mqtt.beginWill(topicStatus, 7, true, 1);   // si el equipo se cae, el broker publica "offline" por el
+  mqtt.print(F("offline"));
+  mqtt.endWill();
+  if (!mqtt.connect(MQTT_HOST, MQTT_PORT)) { Serial.println(F("[MQTT] sin conexion, se reintenta")); return; }
   mqtt.onMessage(alRecibirMensaje);
   mqtt.subscribe(topicCmd, 1);
+  mqtt.beginMessage(topicStatus, 6, true, 1);
+  mqtt.print(F("online"));
+  mqtt.endMessage();
   Serial.printf("[MQTT] conectado, suscrito a %s\n", topicCmd);
 }
 
@@ -204,7 +238,11 @@ void actualizarLuz() {
 void procesarMuestra() {
   TempAndHumidity th = dht.getTempAndHumidity();
   if (isnan(th.temperature) || isnan(th.humidity)) { estado = SIN_DATOS; Serial.println(F("DHT22 sin lectura")); return; }
-  float ocupada = (digitalRead(PIN_PIR) || digitalRead(PIN_PRUEBA)) ? 1.0f : 0.0f;
+  bool presente = digitalRead(PIN_PIR);
+#if PIN_PRUEBA >= 0
+  presente = presente || digitalRead(PIN_PRUEBA);
+#endif
+  float ocupada = presente ? 1.0f : 0.0f;
   float ruido = leerRuidoDb();
 
   histTemp[posHist % HIST] = th.temperature;
@@ -252,18 +290,25 @@ void setup() {
   Serial.begin(115200);
   pinMode(PIN_VERDE, OUTPUT); pinMode(PIN_AMBAR, OUTPUT); pinMode(PIN_ROJO, OUTPUT);
   pinMode(PIN_PIR, INPUT_PULLDOWN);         // entradas protegidas: sin flotar, sin falsos disparos
+#if PIN_PRUEBA >= 0
   pinMode(PIN_PRUEBA, INPUT_PULLDOWN);
+#endif
+#if PIN_BUZZER >= 0
+  pinMode(PIN_BUZZER, OUTPUT);
+  digitalWrite(PIN_BUZZER, HIGH);           // el modulo suena con nivel bajo: en reposo va en alto
+#endif
   attachInterrupt(digitalPinToInterrupt(PIN_PIR), isrPir, CHANGE);
   dht.setup(PIN_DHT, DHTesp::DHT22);
   snprintf(topicCmd, sizeof(topicCmd), "%s/device/%s/cmd", TOPIC_BASE, DEVICE_ID);
   snprintf(topicForecast, sizeof(topicForecast), "%s/device/%s/forecast", TOPIC_BASE, DEVICE_ID);
   snprintf(topicReadings, sizeof(topicReadings), "%s/room/%s/readings", TOPIC_BASE, ROOM_ID);
+  snprintf(topicStatus, sizeof(topicStatus), "%s/device/%s/status", TOPIC_BASE, DEVICE_ID);
   configTime(0, 0, "pool.ntp.org", "time.nist.gov");
   Serial.println(F("ZenRoom - aviso anticipado de calor"));
   // El JSON de lectura supera el buffer MQTT predeterminado de 256 bytes.
   mqtt.setTxPayloadSize(512);
   autoprueba();
-  WiFi.begin(WIFI_SSID, "", 6);
+  WiFi.begin(WIFI_SSID, WIFI_PASS, WIFI_CHANNEL);
 }
 
 void loop() {
