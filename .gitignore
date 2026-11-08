@@ -5,3 +5,4 @@ __pycache__/
 evidencia-serial.log
 evidencia-mqtt.jsonl
 evidencia-luz.vcd
+secrets.ini
