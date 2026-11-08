@@ -24,7 +24,7 @@
 // Los pines dependen del montaje: Wokwi (perfil zenroom-sim) y la protoboard real (perfil zenroom,
 // segun la Guia de conexiones). Se cambian con -DPIN_xxx en platformio.ini.
 #ifndef PIN_DHT
-#define PIN_DHT 15              // DHT22 (sustituye al SHT31). Montaje real: GPIO 23
+#define PIN_DHT 23              // DHT22 (sustituye al SHT31); igual en Wokwi y en el montaje real
 #endif
 #ifndef PIN_RUIDO
 #define PIN_RUIDO 34            // potenciometro que simula el ruido (sustituye al INMP441)
@@ -33,10 +33,10 @@
 #define PIN_PIR 27              // PIR (sustituye al LD2410C)
 #endif
 #ifndef PIN_PRUEBA
-#define PIN_PRUEBA -1           // boton de prueba del escenario automatico de Wokwi; -1 = no existe
+#define PIN_PRUEBA -1           // pulsador 1 (GPIO 13) que fuerza "presente" en las pruebas; -1 = ignorado
 #endif
 #ifndef PIN_BUZZER
-#define PIN_BUZZER -1           // modulo pasivo de disparo bajo (montaje real: GPIO 26); -1 = no existe
+#define PIN_BUZZER 26           // modulo pasivo de disparo bajo; en reposo va en alto. -1 = no existe
 #endif
 const uint8_t PIN_VERDE = 21, PIN_AMBAR = 19, PIN_ROJO = 18;
 
@@ -312,7 +312,7 @@ void muestrearVentana() {
   if (db < lminLote) lminLote = db;
   bool presente = digitalRead(PIN_PIR);
 #if PIN_PRUEBA >= 0
-  presente = presente || digitalRead(PIN_PRUEBA);
+  presente = presente || digitalRead(PIN_PRUEBA) == LOW;   // pulsador a GND, INPUT_PULLUP
 #endif
   if (presente) ventPresentes++;
   nVentLote++;
@@ -346,7 +346,7 @@ void setup() {
   pinMode(PIN_VERDE, OUTPUT); pinMode(PIN_AMBAR, OUTPUT); pinMode(PIN_ROJO, OUTPUT);
   pinMode(PIN_PIR, INPUT_PULLDOWN);         // entradas protegidas: sin flotar, sin falsos disparos
 #if PIN_PRUEBA >= 0
-  pinMode(PIN_PRUEBA, INPUT_PULLDOWN);
+  pinMode(PIN_PRUEBA, INPUT_PULLUP);
 #endif
 #if PIN_BUZZER >= 0
   pinMode(PIN_BUZZER, OUTPUT);
