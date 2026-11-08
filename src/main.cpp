@@ -68,6 +68,7 @@ const uint8_t PIN_VERDE = 21, PIN_AMBAR = 19, PIN_ROJO = 18;
 #ifndef MQTT_PORT
 #define MQTT_PORT 1883          // sin TLS: solo para simulacion o una red privada
 #endif
+// Usuario y clave del broker (el Mosquitto del Edge no admite anonimos). Sin MQTT_USER se conecta sin credenciales.
 const unsigned long PARPADEO_MS = 400;
 const unsigned long REINTENTO_MQTT_MS = 5000;
 #ifndef KEEPALIVE_MS
@@ -177,6 +178,9 @@ void conectarMqtt() {
   ultimoIntento = millis();
   mqtt.setId(DEVICE_ID);
   mqtt.setKeepAliveInterval(KEEPALIVE_MS);
+#ifdef MQTT_USER
+  mqtt.setUsernamePassword(MQTT_USER, MQTT_PASS);
+#endif
   mqtt.beginWill(topicStatus, 7, true, 1);   // si el equipo se cae, el broker publica "offline" por el
   mqtt.print(F("offline"));
   mqtt.endWill();
