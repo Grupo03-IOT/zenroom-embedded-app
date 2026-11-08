@@ -6,3 +6,5 @@ evidencia-serial.log
 evidencia-mqtt.jsonl
 evidencia-luz.vcd
 secrets.ini
+arduino/zenroom_esp32/DeviceSecrets.h
+arduino/wokwi/salida/
