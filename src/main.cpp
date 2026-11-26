@@ -17,6 +17,7 @@
 #include <ArduinoMqttClient.h>
 #include <time.h>
 #include <math.h>
+#include <esp_system.h>
 #include "DHTesp.h"
 #include "../colab/forecast_weights.h"
 
@@ -98,6 +99,8 @@ EstadoPuerta estado = SIN_DATOS;
 float ultimaProb = 0.0f;
 
 // Lote de 10 s = 80 ventanas de 125 ms (contrato del Edge). El audio nunca sale: solo niveles en dB.
+// Con la hora UTC sincronizada cada lote empieza en un segundo multiplo de 10 (:00, :10 ... :50) y su
+// ts es ese inicio: asi cada minuto del Edge recibe exactamente sus 6 lotes, como el sketch de Arduino.
 const unsigned long VENTANA_MS = 125;
 const uint8_t VENT_POR_SEG = 8, SEG_POR_LOTE = 10, VENT_POR_LOTE = 80, HIST_BINS = 70;
 const float HIST_MIN_DB = 30.0f;
@@ -108,6 +111,9 @@ float energiaSeg = 0, energiaLote = 0, lmaxLote = 0, lminLote = 200;
 // ultimos valores cerrados: de ellos se alimenta el modelo, que corre una vez por SAMPLE_MS
 float ultTemp = NAN, ultHum = NAN, ultRuido = 30.0f, ultOcupada = 0.0f;
 unsigned long ultimaMuestra = 0;
+time_t inicioLote = 0;                  // segundo UTC en que empezo el lote; 0 = sin hora todavia
+char bootId[33];                        // distinto en cada arranque: el Edge no confunde la seq 1 de dos arranques
+const time_t HORA_VALIDA = 1577836800;  // 2020-01-01: antes de eso el reloj no se sincronizo por NTP
 
 // ---------------------------------------------------------------- interrupcion del PIR
 void IRAM_ATTR isrPir() { transicionesPir++; }
@@ -207,16 +213,15 @@ void publicarLote(float ruidoLmax, float ruidoLmin, uint16_t trans) {
   if (!mqtt.connected()) return;
   static uint32_t secuencia = 0;
   static char msg[768];
-  time_t ahora = time(nullptr);
   struct tm utc;
-  char ts[24] = "1970-01-01T00:00:00Z";
-  if (ahora > 1577836800 && gmtime_r(&ahora, &utc)) {
+  char ts[24] = "1970-01-01T00:00:00Z";   // sin NTP: el Edge lo marca clock_suspect y usa su hora de recepcion
+  if (inicioLote >= HORA_VALIDA && gmtime_r(&inicioLote, &utc)) {
     strftime(ts, sizeof(ts), "%Y-%m-%dT%H:%M:%SZ", &utc);
   }
   size_t n = snprintf(msg, sizeof(msg),
-    "{\"device_id\":\"%s\",\"room_id\":\"%s\",\"seq\":%lu,\"ts\":\"%s\",\"window_s\":10,\"fw_version\":\"zenroom-forecast-v2\","
-    "\"acoustic\":{\"laeq_1s\":[",
-    DEVICE_ID, ROOM_ID, (unsigned long)++secuencia, ts);
+    "{\"device_id\":\"%s\",\"room_id\":\"%s\",\"boot_id\":\"%s\",\"seq\":%lu,\"ts\":\"%s\",\"window_s\":10,"
+    "\"fw_version\":\"zenroom-forecast-v3\",\"acoustic\":{\"laeq_1s\":[",
+    DEVICE_ID, ROOM_ID, bootId, (unsigned long)++secuencia, ts);
   for (uint8_t i = 0; i < SEG_POR_LOTE && n < sizeof(msg); i++)
     n += snprintf(msg + n, sizeof(msg) - n, i ? ",%.1f" : "%.1f", laeq1s[i]);
   n += snprintf(msg + n, sizeof(msg) - n, "],\"lmax\":%.1f,\"lmin\":%.1f,\"hist_min_db\":30.0,\"hist_bin_db\":1.0,\"hist\":[", ruidoLmax, ruidoLmin);
@@ -304,6 +309,11 @@ void procesarModelo() {
 
 // Cada 125 ms: un nivel de ruido, la presencia y el acumulado del segundo y del lote.
 void muestrearVentana() {
+  if (nVentLote == 0) {                     // primera ventana de un lote nuevo
+    time_t ahora = time(nullptr);
+    if (ahora >= HORA_VALIDA && ahora % 10 != 0) return;   // esperar el proximo :x0 UTC
+    inicioLote = ahora >= HORA_VALIDA ? ahora : 0;
+  }
   float db = leerRuidoDb();
   int bin = (int)(db - HIST_MIN_DB);
   if (bin < 0) bin = 0;
@@ -342,7 +352,12 @@ void cerrarLote() {
   nSeg = nVentSeg = nVentLote = ventPresentes = 0;
   energiaSeg = energiaLote = lmaxLote = 0;
   lminLote = 200;
-  if (millis() - ultimaMuestra >= SAMPLE_MS) { ultimaMuestra = millis(); procesarModelo(); }
+  // El modelo va a su ritmo (SAMPLE_MS), no al de los lotes. Medio lote de tolerancia: si no, un lote que
+  // cierra unos ms antes de completar SAMPLE_MS dejaria la inferencia para el siguiente (70 s en vez de 60).
+  if (millis() - ultimaMuestra + 5000UL >= SAMPLE_MS) {
+    ultimaMuestra = millis();
+    procesarModelo();
+  }
 }
 
 void setup() {
@@ -363,6 +378,8 @@ void setup() {
   snprintf(topicReadings, sizeof(topicReadings), "%s/room/%s/readings", TOPIC_BASE, ROOM_ID);
   snprintf(topicStatus, sizeof(topicStatus), "%s/device/%s/status", TOPIC_BASE, DEVICE_ID);
   configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+  snprintf(bootId, sizeof(bootId), "%08lx%08lx%08lx%08lx", (unsigned long)esp_random(),
+           (unsigned long)esp_random(), (unsigned long)esp_random(), (unsigned long)esp_random());
   Serial.println(F("ZenRoom - aviso anticipado de calor"));
   // El lote (80 ventanas, histograma de 70 casillas) supera el buffer MQTT predeterminado de 256 bytes.
   mqtt.setTxPayloadSize(768);
