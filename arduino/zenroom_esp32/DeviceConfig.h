@@ -20,7 +20,7 @@
 #define SITE_CODE "site-1"          // debe ser el codigo del local en Cloud y el que usa el Edge (SITE_CODE)
 #endif
 #ifndef FW_VERSION
-#define FW_VERSION "0.4.0-mqtt"
+#define FW_VERSION "zenroom-forecast-arduino-0.5.0"  // verificar-dispositivo-real.sh exige "zenroom-forecast"
 #endif
 
 // ---- Red
