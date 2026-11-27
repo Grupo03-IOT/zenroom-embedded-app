@@ -51,6 +51,8 @@ float minLevel = 140, maxLevel = 0;
 unsigned histogram[70] = {0}, sampleCount = 0, transitions = 0;
 time_t batchStart = 0;
 
+constexpr uint32_t CLIMATE_HOLD_MS = 10000;  // ~4 lecturas del DHT22 seguidas sin respuesta
+
 bool pendingTime(uint32_t deadline) {
   return deadline != 0 && int32_t(deadline - millis()) > 0;
 }
@@ -475,16 +477,20 @@ void setup() {
 }
 
 void loop() {
-  static uint32_t lastClimate = 0, lastPresence = 0, nextSample = 0, lastLog = 0;
+  static uint32_t lastClimate = 0, lastPresence = 0, nextSample = 0, lastLog = 0, lastValidClimate = 0;
+  static bool everValid = false;
   uint32_t now = millis();
   handleButtons();
   if (now - lastClimate >= 2200) {
     lastClimate = now;
-    temperature = dht.readTemperature();
-    humidity = dht.readHumidity();
-    climateValid = isfinite(temperature) && isfinite(humidity)
-                   && temperature >= -40 && temperature <= 80 && humidity >= 0 && humidity <= 100;
-    if (!climateValid) Serial.println("DHT22 invalido: revisar GPIO23; se omite la ventana");
+    float t = dht.readTemperature(), h = dht.readHumidity();
+    bool ok = isfinite(t) && isfinite(h) && t >= -40 && t <= 80 && h >= 0 && h <= 100;
+    if (ok) { temperature = t; humidity = h; lastValidClimate = now; everValid = true; }
+    // Una lectura fallida suelta del DHT22 (checksum) no debe tirar el lote de 10 s en curso: se sigue con
+    // la ultima valida hasta CLIMATE_HOLD_MS. Si el sensor no responde mas tiempo, se omiten las ventanas.
+    climateValid = everValid && now - lastValidClimate < CLIMATE_HOLD_MS;
+    if (!ok) Serial.println(climateValid ? "DHT22 sin lectura: se usa la ultima valida"
+                                         : "DHT22 invalido: revisar GPIO23; se omite la ventana");
   }
   if (now - lastPresence >= 250) { lastPresence = now; readPresence(); }
   if (int32_t(now - nextSample) >= 0) {
